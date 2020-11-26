@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="PlanetProtectors"
-run/main_scene="res://Lobby.tscn"
+run/main_scene="res://Scenes/Lobby.tscn"
 config/icon="res://icon.png"
 
 [autoload]

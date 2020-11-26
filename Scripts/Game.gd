@@ -8,7 +8,7 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var new_player = preload("res://Player.tscn").instance()
+	var new_player = preload("res://Scenes/Player.tscn").instance()
 	print("test name  " , new_player.name)
 	new_player.name = str(get_tree().get_network_unique_id())
 	print("test name  " , new_player.name)

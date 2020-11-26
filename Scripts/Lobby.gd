@@ -39,4 +39,4 @@ func _on_NAME_INPUT_text_changed(new_text):
 	_player_name = new_text
 
 func _load_game():
-	get_tree().change_scene("res://Game.tscn")
+	get_tree().change_scene("res://Scenes/Game.tscn")
