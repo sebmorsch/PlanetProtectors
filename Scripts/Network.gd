@@ -42,7 +42,7 @@ remote func _send_player_info(id, info):
 			rpc_id(id, '_send_player_info', peer_id, players[peer_id])
 	players[id] = info
 	
-	var new_player = load('res://Player.tscn').instance()
+	var new_player = load('res://Scenes/Player.tscn').instance()
 	new_player.name = str(id)
 	new_player.set_network_master(id)
 	get_tree().get_root().add_child(new_player)
