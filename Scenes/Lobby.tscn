@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Lobby.gd" type="Script" id=1]
+
+[node name="Lobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 200.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NinePatchRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 35.0
+margin_top = 60.0
+margin_right = -35.0
+margin_bottom = -45.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IP" type="Label" parent="NinePatchRect/VBoxContainer"]
+margin_right = 330.0
+margin_bottom = 14.0
+text = "IP"
+
+[node name="IP_INPUT" type="LineEdit" parent="NinePatchRect/VBoxContainer"]
+margin_top = 18.0
+margin_right = 330.0
+margin_bottom = 42.0
+
+[node name="PORT" type="Label" parent="NinePatchRect/VBoxContainer"]
+margin_top = 46.0
+margin_right = 330.0
+margin_bottom = 60.0
+text = "PORT"
+
+[node name="PORT_INPUT" type="LineEdit" parent="NinePatchRect/VBoxContainer"]
+margin_top = 64.0
+margin_right = 330.0
+margin_bottom = 88.0
+
+[node name="Name" type="Label" parent="NinePatchRect/VBoxContainer"]
+margin_top = 92.0
+margin_right = 330.0
+margin_bottom = 106.0
+text = "NAME"
+
+[node name="NAME_INPUT" type="LineEdit" parent="NinePatchRect/VBoxContainer"]
+margin_top = 110.0
+margin_right = 330.0
+margin_bottom = 134.0
+
+[node name="CREATE" type="Button" parent="NinePatchRect/VBoxContainer"]
+margin_top = 138.0
+margin_right = 330.0
+margin_bottom = 158.0
+text = "CREATE"
+
+[node name="JOIN" type="Button" parent="NinePatchRect/VBoxContainer"]
+margin_top = 162.0
+margin_right = 330.0
+margin_bottom = 182.0
+text = "JOIN"
+[connection signal="text_changed" from="NinePatchRect/VBoxContainer/IP_INPUT" to="." method="_on_IP_INPUT_text_changed"]
+[connection signal="text_changed" from="NinePatchRect/VBoxContainer/PORT_INPUT" to="." method="_on_PORT_INPUT_text_changed"]
+[connection signal="text_changed" from="NinePatchRect/VBoxContainer/NAME_INPUT" to="." method="_on_NAME_INPUT_text_changed"]
+[connection signal="pressed" from="NinePatchRect/VBoxContainer/CREATE" to="." method="_on_CREATE_pressed"]
+[connection signal="pressed" from="NinePatchRect/VBoxContainer/JOIN" to="." method="_on_JOIN_pressed"]
