@@ -1,9 +1,9 @@
 extends KinematicBody2D
 
-var movespeed = 400
+var movespeed = 100
 var velocity = Vector2()
 
-puppet var puppet_position = Vector2(0,0)
+puppet var puppet_position = Vector2()
 puppet var puppet_velosity = Vector2()
 
 # Called when the node enters the scene tree for the first time.

@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Resources/Player.png" type="Texture" id=1]
+[ext_resource path="res://Resources/p.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
 [ext_resource path="res://Resources/montserrat.otf" type="DynamicFontData" id=3]
 
@@ -8,14 +8,22 @@
 size = 28
 font_data = ExtResource( 3 )
 
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 2.69337
+height = 7.84594
+
 [node name="Player" type="KinematicBody2D"]
 scale = Vector2( 0.530064, 0.530064 )
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="label" type="Label" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -31,3 +39,8 @@ text = "Player 1"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.3123, 7.37038 )
+rotation = 1.5708
+shape = SubResource( 2 )

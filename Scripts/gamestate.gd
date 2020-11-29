@@ -88,7 +88,7 @@ remote func pre_start_game(spawn_points):
 		print("pre start game plyer id:", p_id)
 		print("#########")
 		player.set_name(str(p_id)) # Use unique ID as node name.
-		player.position=Vector2.ZERO
+		player.position=Vector2(10,10)
 		player.set_network_master(p_id) #set unique id as master.
 
 		if p_id == get_tree().get_network_unique_id():
