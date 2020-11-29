@@ -1,42 +1,99 @@
 extends Control
 
-var _player_name = ""
-var _ip = ""
-var _port = ""
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	# Called every time the node is added to the scene.
+	gamestate.connect("connection_failed", self, "_on_connection_failed")
+	gamestate.connect("connection_succeeded", self, "_on_connection_success")
+	gamestate.connect("player_list_changed", self, "refresh_lobby")
+	gamestate.connect("game_ended", self, "_on_game_ended")
+	gamestate.connect("game_error", self, "_on_game_error")
+	# Set the player name according to the system username. Fallback to the path.
+	if OS.has_environment("USERNAME"):
+		$Connect/Name.text = OS.get_environment("USERNAME")
+	else:
+		var desktop_path = OS.get_system_dir(0).replace("\\", "/").split("/")
+		$Connect/Name.text = desktop_path[desktop_path.size() - 2]
 
-func _on_CREATE_pressed():
-	if _player_name == "":
+
+func _on_host_pressed():
+	if $Connect/Name.text == "":
+		$Connect/ErrorLabel.text = "Invalid name!"
 		return
-	if _ip == "":
+
+	$Connect.hide()
+	$Players.show()
+	$Connect/ErrorLabel.text = ""
+
+	var player_name = $Connect/Name.text
+	var port = $Connect/Port.text
+	if not port.is_valid_integer():
+		$Connect/ErrorLabel.text = "Invalid Port address!"
 		return
-	if _port == "":
+	gamestate.host_game(port, player_name)
+	refresh_lobby()
+
+
+func _on_join_pressed():
+	if $Connect/Name.text == "":
+		$Connect/ErrorLabel.text = "Invalid name!"
 		return
-	Network.create_server(_player_name, _port)
-	_load_game()
 
-func _on_JOIN_pressed():
-	if _player_name == "":
+	var ip = $Connect/IPAddress.text
+	if not ip.is_valid_ip_address():
+		$Connect/ErrorLabel.text = "Invalid IP address!"
 		return
-	if _ip == "":
+	var port = $Connect/Port.text
+	if not port.is_valid_integer():
+		$Connect/ErrorLabel.text = "Invalid Port address!"
 		return
-	if _port == "":
-		return
-	Network.connect_to_server(_player_name, _ip, _port)
-	_load_game()
+	$Connect/ErrorLabel.text = ""
+	$Connect/Host.disabled = true
+	$Connect/Join.disabled = true
+
+	var player_name = $Connect/Name.text
+	gamestate.join_game(ip, port, player_name)
 
 
-func _on_IP_INPUT_text_changed(new_text):
-	_ip = new_text
+func _on_connection_success():
+	$Connect.hide()
+	$Players.show()
 
-func _on_PORT_INPUT_text_changed(new_text):
-	_port = new_text
 
-func _on_NAME_INPUT_text_changed(new_text):
-	_player_name = new_text
+func _on_connection_failed():
+	$Connect/Host.disabled = false
+	$Connect/Join.disabled = false
+	$Connect/ErrorLabel.set_text("Connection failed.")
 
-func _load_game():
-	get_tree().change_scene("res://Scenes/Game.tscn")
+
+func _on_game_ended():
+	show()
+	$Connect.show()
+	$Players.hide()
+	$Connect/Host.disabled = false
+	$Connect/Join.disabled = false
+
+
+func _on_game_error(errtxt):
+	$ErrorDialog.dialog_text = errtxt
+	$ErrorDialog.popup_centered_minsize()
+	$Connect/Host.disabled = false
+	$Connect/Join.disabled = false
+
+
+func refresh_lobby():
+	var players = gamestate.get_player_list()
+	players.sort()
+	$Players/List.clear()
+	$Players/List.add_item(gamestate.get_player_name() + " (You)")
+	for p in players:
+		$Players/List.add_item(p)
+
+	$Players/Start.disabled = not get_tree().is_network_server()
+
+
+func _on_start_pressed():
+	gamestate.begin_game()
+
+
+func _on_find_public_ip_pressed():
+	OS.shell_open("https://icanhazip.com/")

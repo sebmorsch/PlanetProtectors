@@ -3,10 +3,6 @@ extends KinematicBody2D
 var movespeed = 400
 var velocity = Vector2()
 
-
-enum MoveDirection { UP, DOWN, LEFT, RIGHT, NONE}
-
-
 puppet var puppet_position = Vector2(0,0)
 puppet var puppet_velosity = Vector2()
 
@@ -15,7 +11,7 @@ func _ready():
 	pass # Replace with function body.
 
 
-func _process (delta):
+func _physics_process(delta):
 	
 	if is_network_master():
 		
@@ -30,20 +26,25 @@ func _process (delta):
 			move_dir.x += 1
 		
 		velocity = move_dir.normalized() * movespeed
-		print(name)
-		rset_unreliable_id(int(name),"puppet_position", position)
-		rset_unreliable_id(int(name), "puppet_velosity", velocity)
+	
+		rset("puppet_position", position)
+		rset("puppet_velosity", velocity)
 	else:
 		position = puppet_position
 		velocity = puppet_velosity
 	
 	position += velocity * delta
 	
+	move_and_slide(velocity)
 	if not is_network_master():
-		puppet_position = position
+		puppet_position = position 
 
 		
 func init(name, position, is_slave):
 	position = position
 	if is_slave:
 		$Sprite.texture = load('res://Resources/Player.png')
+
+func set_player_name(new_name):
+	get_node("label").set_text(new_name)
+	print(new_name)
