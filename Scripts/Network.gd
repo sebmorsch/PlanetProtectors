@@ -17,6 +17,7 @@ func create_server(player_nickname, port):
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_server(int(port), MAX_PLAYERS)
 	get_tree().set_network_peer(peer)
+	print(get_tree().get_network_unique_id())
 
 func connect_to_server(player_nickname, ip, port):
 	self_data.name = player_nickname

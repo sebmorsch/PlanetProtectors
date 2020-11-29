@@ -1,63 +1,46 @@
 extends KinematicBody2D
 
 var movespeed = 400
-
+var velocity = Vector2()
 
 
 enum MoveDirection { UP, DOWN, LEFT, RIGHT, NONE}
 
-slave var slave_position = Vector2()
-slave var slave_movement = MoveDirection.NONE
+
+puppet var puppet_position = Vector2(0,0)
+puppet var puppet_velosity = Vector2()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 
-func _physics_process (delta):
-	var direction = []
-	if is_network_master():	
+func _process (delta):
+	
+	if is_network_master():
+		
+		var move_dir = Vector2()	
 		if Input.is_action_pressed("player_up"):
-			direction.append(MoveDirection.UP) 		
+			move_dir.y -= 1
 		if Input.is_action_pressed("player_down"):
-			direction.append(MoveDirection.DOWN) 	
+			move_dir.y += 1
 		if Input.is_action_pressed("player_left"):
-			direction.append(MoveDirection.LEFT) 	
+			move_dir.x -= 1
 		if Input.is_action_pressed("player_right"):
-			direction.append(MoveDirection.RIGHT) 	
+			move_dir.x += 1
 		
-		rset_unreliable('slave_position', position)
-		rset_unreliable('slave_movement', direction)
-		_move(direction, delta)
-	
+		velocity = move_dir.normalized() * movespeed
+		print(name)
+		rset_unreliable_id(int(name),"puppet_position", position)
+		rset_unreliable_id(int(name), "puppet_velosity", velocity)
 	else:
-		_move(slave_movement, delta)
-		position = slave_position
-		
-	if get_tree().is_network_server():
-		Network.update_position(int(name), position)
-		
-func _move(direction, delta):
-	print(direction)
-	print(delta)
-	var velocity = Vector2()
-	if not direction:
-		return
-	if MoveDirection.RIGHT in direction:
-		velocity.x += 1
-	if  MoveDirection.LEFT in direction:
-		velocity.x -= 1
-	if MoveDirection.DOWN in direction:
-		velocity.y += 1
-	if MoveDirection.UP in direction:
-		velocity.y -= 1
+		position = puppet_position
+		velocity = puppet_velosity
 	
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * movespeed
-
 	position += velocity * delta
-
-
+	
+	if not is_network_master():
+		puppet_position = position
 
 		
 func init(name, position, is_slave):
